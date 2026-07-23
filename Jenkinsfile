@@ -1,13 +1,12 @@
 pipeline{
     agent any
+    tools{
+        nodejs 'nodejs-22-6-0'
+    }
     stages{
-        stage('VM Node Version'){
+        stage('Installing Dependencies'){
             steps{
-            sh '''
-            export PATH="/Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin:$PATH"
-            /Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin/node -v
-            /Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin/npm -v
-            '''
+            sh 'npm insall --no-audit'
          }
     }
  }
