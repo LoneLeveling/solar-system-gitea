@@ -27,6 +27,8 @@ pipeline{
                        --out \\\'./\\\'
                        --format \\\'ALL\\\'        
                       --prettyPrint''', odcInstallation: 'OWASP-DeCheck-12'
+
+                      dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
          }
         }
         }
