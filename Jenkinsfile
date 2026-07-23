@@ -21,6 +21,15 @@ pipeline{
          }
          }
 
+stage('Check Environment') {
+    steps {
+        sh '''
+            echo "PATH=$PATH"
+            echo "JAVA_HOME=$JAVA_HOME"
+            ls -l /opt/homebrew/opt/openjdk@21/bin/java
+        '''
+    }
+}
 stage('Check Java') {
     steps {
         sh '''
