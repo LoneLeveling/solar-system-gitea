@@ -1,4 +1,4 @@
-pipleline{
+pipeline{
     agent any
     stages{
         stage('VM Node Version'){
@@ -6,6 +6,6 @@ pipleline{
             sh 'node -v' 
             sh 'npm -v'
         }
-      }
-}
+    }
+ }
 }
