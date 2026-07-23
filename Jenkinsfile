@@ -21,6 +21,16 @@ pipeline{
          }
          }
 
+stage('Check Java') {
+    steps {
+        sh '''
+            which java
+            java --version
+            echo $JAVA_HOME
+            /usr/libexec/java_home -V || true
+        '''
+    }
+}
          stage('OWASP Dependency Check'){
             steps{
             dependencyCheck additionalArguments: '''--scan \\\'./\\\'
