@@ -1,12 +1,12 @@
 pipeline{
     agent any
     tools{
-        nodejs 'nodejs-22-6-0'
+        nodejs 'nodes-22-6-0'
     }
     stages{
         stage('Installing Dependencies'){
             steps{
-            sh 'npm insall --no-audit'
+            sh 'npm install --no-audit'
          }
     }
  }
