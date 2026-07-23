@@ -30,16 +30,21 @@ pipeline{
             
          stage('OWASP Dependency Check'){
             steps{
-            dependencyCheck additionalArguments: '''--scan \\\'./\\\'
-                       --out \\\'./\\\'
-                       --format \\\'ALL\\\'        
-                      --prettyPrint''', odcInstallation: 'OWASP-DeCheck-12'
+           dependencyCheck(
+           odcInstallation: 'OWASP-DeCheck-12',
+           additionalArguments: '''
+           --scan .
+           --out .
+           --format ALL
+           --prettyPrint
+           '''
+          )
 
-      dependencyCheckPublisher(
-    failedTotalCritical: 1,
-   pattern: '**/dependency-check-report.xml',
-    stopBuild: true
-       )
+          dependencyCheckPublisher(
+          pattern: '**/dependency-check-report.xml',
+          failedTotalCritical: 1,
+          stopBuild: true
+           )
          }
         }
         }
