@@ -4,8 +4,8 @@ pipeline{
         stage('VM Node Version'){
             steps{
             sh 'export PATH="/Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin:$PATH"'
-            sh 'node -v' 
-            sh 'npm -v'
+            sh '/Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin/node -v'
+            sh ' /Users/abhisheksharma/.nvm/versions/node/v22.23.1/bin/npm -v'
         }
     }
  }
