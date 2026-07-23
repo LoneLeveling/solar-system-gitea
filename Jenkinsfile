@@ -3,7 +3,14 @@ pipeline{
     tools{
         nodejs 'nodes-22-6-0'
     }
+
+     environment {
+        JAVA_HOME = "/opt/homebrew/opt/openjdk@21"
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+    }
+
     stages{
+       
         stage('Installing Dependencies'){
             steps{
             sh 'npm install --no-audit'
@@ -20,26 +27,7 @@ pipeline{
             '''
          }
          }
-
-stage('Check Environment') {
-    steps {
-        sh '''
-            echo "PATH=$PATH"
-            echo "JAVA_HOME=$JAVA_HOME"
-            ls -l /opt/homebrew/opt/openjdk@21/bin/java
-        '''
-    }
-}
-stage('Check Java') {
-    steps {
-        sh '''
-            which java
-            java --version
-            echo $JAVA_HOME
-            /usr/libexec/java_home -V || true
-        '''
-    }
-}
+            
          stage('OWASP Dependency Check'){
             steps{
             dependencyCheck additionalArguments: '''--scan \\\'./\\\'
