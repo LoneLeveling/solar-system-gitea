@@ -7,6 +7,9 @@ pipeline{
      environment {
         JAVA_HOME = "/opt/homebrew/opt/openjdk@21"
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+}
+
     }
 
     stages{
@@ -46,15 +49,18 @@ pipeline{
           stopBuild: true
            )
             junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+            
            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
-
-        stage('Unit Testing'){
+        }
+         stage('Unit Testing'){
             steps{
+            withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                 sh 'npm test'
             }
-        }
+                        junit allowEmptyResults: true, testResults: 'test-results.xml'
+            }
         }
     }
  }
