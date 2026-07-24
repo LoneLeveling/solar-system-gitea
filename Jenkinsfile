@@ -66,6 +66,15 @@ pipeline{
                         junit allowEmptyResults: true, testResults: 'test-results.xml'
             }
         }
+
+        stage('code coverage'){
+        steps{
+            catchError(buildResult: 'SUCCESS', message: 'OOPS!! Build failed but continuing further', stageResult: 'UNSTABLE') {
+                sh 'npm run coverage'
+            } 
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverge/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+         }
+        }
+        }
  }
-}
 
