@@ -13,20 +13,29 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
-console.log("URI:", process.env.MONGO_URI);
-console.log("USER:", process.env.MONGO_USERNAME);
-console.log("PASS exists:", !!process.env.MONGO_PASSWORD);
 
-mongoose.connect(process.env.MONGO_URI, {
-    user: process.env.MONGO_USERNAME,
-    pass: process.env.MONGO_PASSWORD
-})
-.then(() => {
-    console.log("MongoDB Connected");
-})
-.catch((err) => {
-    console.error("MongoDB Connection Error:", err);
-});
+async function startServer() {
+    try {
+        console.log("URI:", process.env.MONGO_URI);
+        console.log("USER:", process.env.MONGO_USERNAME);
+        console.log("PASS exists:", !!process.env.MONGO_PASSWORD);
+        
+        await mongoose.connect(process.env.MONGO_URI, {
+            user: process.env.MONGO_USERNAME,
+            pass: process.env.MONGO_PASSWORD
+        });
+
+        console.log("MongoDB Connected");
+
+        app.listen(3000, () => {
+            console.log("Server successfully running on port - 3000");
+        });
+
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
+}
 
 var Schema = mongoose.Schema;
 
@@ -41,20 +50,6 @@ var dataSchema = new Schema({
 var planetModel = mongoose.model('planets', dataSchema);
 
 
-
-// app.post('/planet',   function(req, res) {
-//    // console.log("Received Planet ID " + req.body.id)
-//     planetModel.findOne({
-//         id: req.body.id
-//     }, function(err, planetData) {
-//         if (err) {
-//             alert("Ooops, We only have 9 planets and a sun. Select a number from 0 - 9")
-//             res.send("Error in Planet Data")
-//         } else {
-//             res.send(planetData);
-//         }
-//     })
-// })
 app.post('/planet', async function(req, res) {
     try {
         const planetData = await planetModel.findOne({
@@ -105,7 +100,5 @@ app.get('/ready',   function(req, res) {
     });
 })
 
-app.listen(3000, () => { console.log("Server successfully running on port - " +3000); })
 module.exports = app;
-
-//module.exports.handler = serverless(app)
+startServer();

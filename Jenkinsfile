@@ -7,7 +7,7 @@ pipeline{
      environment {
         JAVA_HOME = "/opt/homebrew/opt/openjdk@21"
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
-        MONGO_URI = "mongodb+srv://supercluster.d83jj.mongodb.net/superData"
+        MONGO_URI = "mongodb+srv://cluster0.7mmrff9.mongodb.net/superData?retryWrites=true&w=majority&appName=Cluster0"
         }
 
             options {
@@ -58,7 +58,7 @@ pipeline{
         }
         }
          stage('Unit Testing'){
-            options{ retry(2) }
+            // options{ retry(2) }
             steps{
             withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                 sh 'npm test'
