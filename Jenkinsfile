@@ -54,6 +54,7 @@ pipeline{
          }
         }
         }
+        }
          stage('Unit Testing'){
             steps{
             withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
@@ -62,7 +63,6 @@ pipeline{
                         junit allowEmptyResults: true, testResults: 'test-results.xml'
             }
         }
-    }
  }
 }
 
