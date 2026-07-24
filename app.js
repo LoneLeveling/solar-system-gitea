@@ -21,9 +21,7 @@ async function startServer() {
             user: process.env.MONGO_USERNAME,
             pass: process.env.MONGO_PASSWORD
         });
-
         console.log("MongoDB Connected");
-
         app.listen(3000, () => {
             console.log("Server successfully running on port - 3000");
         });
