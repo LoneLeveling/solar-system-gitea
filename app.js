@@ -16,7 +16,7 @@ app.use(cors())
 
 
 async function startServer() {
-    try {        
+    try {
         await mongoose.connect(process.env.MONGO_URI, {
             user: process.env.MONGO_USERNAME,
             pass: process.env.MONGO_PASSWORD
