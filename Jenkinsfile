@@ -45,6 +45,8 @@ pipeline{
           failedTotalCritical: 1,
           stopBuild: true
            )
+
+           publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
 
