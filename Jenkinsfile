@@ -45,7 +45,7 @@ pipeline{
           failedTotalCritical: 1,
           stopBuild: true
            )
-
+            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
