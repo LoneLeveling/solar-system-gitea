@@ -8,7 +8,9 @@ pipeline{
         JAVA_HOME = "/opt/homebrew/opt/openjdk@21"
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
         MONGO_URI = "mongodb+srv://cluster0.7mmrff9.mongodb.net/superData?retryWrites=true&w=majority&appName=Cluster0"
-        MONGO_DB_CREDS=credentials('mongo-db-credentials')
+        // MONGO_DB_CREDS=credentials('mongo-db-credentials')
+        MONGO_USERNAME=credentials('mongo-db-username')
+        MONGO_PASSWORD=credentials('mongo-db-password')
         }
 
             options {
@@ -51,9 +53,7 @@ pipeline{
           failedTotalCritical: 1,
           stopBuild: true
            )
-            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
 
-           publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
         }
@@ -69,7 +69,6 @@ pipeline{
             // withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                 sh 'npm test'
             // }
-                        junit allowEmptyResults: true, testResults: 'test-results.xml'
             }
         }
 
@@ -79,9 +78,18 @@ pipeline{
             catchError(buildResult: 'SUCCESS', message: 'OOPS!! Build failed but continuing further', stageResult: 'UNSTABLE') {
                 sh 'npm run coverage'
             }
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
         }
+        //Archiving Junit and publishing HTML reports always do post build stage.
+        post {
+  always {
+           junit allowEmptyResults: true, testResults: 'test-results.xml'
+           junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+           publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+           publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+  }
+}
+
 }
  
