@@ -59,11 +59,13 @@ pipeline{
         }
         }
          stage('Unit Testing'){
-            sh 'echo $MONGO_DB_CREDS'
-            sh 'echo $MONGO_DB_CREDS_USR'
-            sh 'echo $MONGO_DB_CREDS_PSW'
             // options{ retry(2) }
             steps{
+                sh '''
+             echo $MONGO_DB_CREDS
+             echo $MONGO_DB_CREDS_USR
+             echo $MONGO_DB_CREDS_PSW
+            '''
             // withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                 sh 'npm test'
             // }
