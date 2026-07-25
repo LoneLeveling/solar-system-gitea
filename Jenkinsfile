@@ -67,11 +67,13 @@ pipeline{
             }
         }
 
-        stage('code coverage'){
+        stage('Code Coverage'){
         steps{
+            withCredentials([usernamePassword(credentialsId: 'mongo-db-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]){
             catchError(buildResult: 'SUCCESS', message: 'OOPS!! Build failed but continuing further', stageResult: 'UNSTABLE') {
                 sh 'npm run coverage'
             } 
+            }
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverge/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
          }
         }
