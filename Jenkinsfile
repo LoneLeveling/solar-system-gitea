@@ -96,6 +96,11 @@ pipeline{
             }
         }
         }
+
+        stage('Build Docker Image'){
+            sh 'printenv'
+            sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
+        }
         }
 
         //Archiving Junit and publishing HTML reports always do post build stage.
