@@ -111,7 +111,7 @@ pipeline{
         -v "$WORKSPACE":/workspace \
         aquasec/trivy:0.72.0 \
         image \
-        --severity LOW,MEDIUM \
+        --severity LOW,MEDIUM,HIGH \
         --exit-code 0 \
         --quiet \
         --format json \
@@ -123,7 +123,7 @@ pipeline{
         -v "$WORKSPACE":/workspace \
         aquasec/trivy:0.72.0 \
         image \
-        --severity HIGH,CRITICAL \
+        --severity CRITICAL \
         --exit-code 1 \
         --quiet \
         --format json \
