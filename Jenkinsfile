@@ -102,13 +102,58 @@ pipeline{
             sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
         }
         }
+
+        stage('Trivy Vulnerability Scanner'){
+            steps{
+             sh """
+        trivy image loneleveling/solar-system:$GIT_COMMIT \
+            --severity LOW,MEDIUM \
+            --exit-code 0 \
+            --quiet \
+            --format json -o trivy-image-MEDIUM-results.json
+
+        trivy image loneleveling/solar-system:$GIT_COMMIT \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            --quiet \
+            --format json -o trivy-image-CRITICAL-results.json
+    """
         }
+        }
+        post{
+             always
+               {
+                 sh '''
+                   trivy convert \
+                   --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                   --output trivy-image-MEDIUM-results.html trivy-image-MEDIUM-results.json
+
+                  trivy convert \
+                  --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                  --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
+
+                  trivy convert \
+                  --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                  --output trivy-image-MEDIUM-results.xml trivy-image-MEDIUM-results.json
+                
+                  trivy convert \
+                  --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                  --output trivy-image-CRITICAL-results.xml trivy-image-CRITICAL-results.json
+                 '''
+                }
+            }
 
         //Archiving Junit and publishing HTML reports always do post build stage.
     post{
     always{
+        // Archiving the XML files
             junit allowEmptyResults: true, testResults: 'test-results.xml'
             junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
+            junit allowEmptyResults: true, testResults: 'trivy-image-MEDIUM-results.xml'
+            junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
+        //Publishing the HTML Reports
+            publishHTML([allowMissing: true,alwaysLinkToLastBuild: true,keepAll: true,reportDir: '.',reportFiles: 'trivy-image-MEDIUM-results.html',reportName: 'Trivy MEDIUM Report'])
+            publishHTML([allowMissing: true,alwaysLinkToLastBuild: true,keepAll: true,reportDir: '.',reportFiles: 'trivy-image-CRITICAL-results.html',reportName: 'Trivy CRITICAL Report'])
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
