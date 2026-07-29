@@ -98,7 +98,7 @@ pipeline{
         }
         stage('Build Docker Image'){
             steps{
-            sh 'printenv'
+            // sh 'printenv'
             sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
         }
         }
@@ -106,38 +106,72 @@ pipeline{
         stage('Trivy Vulnerability Scanner'){
             steps{
              sh """
-        trivy image loneleveling/solar-system:$GIT_COMMIT \
-            --severity LOW,MEDIUM \
-            --exit-code 0 \
-            --quiet \
-            --format json -o trivy-image-MEDIUM-results.json
+        docker run --rm \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v "$WORKSPACE":/workspace \
+        aquasec/trivy:0.72.0 \
+        image \
+        --severity LOW,MEDIUM \
+        --exit-code 0 \
+        --quiet \
+        --format json \
+        --output /workspace/trivy-image-MEDIUM-results.json \
+        loneleveling/solar-system:$GIT_COMMIT
 
-        trivy image loneleveling/solar-system:$GIT_COMMIT \
-            --severity HIGH,CRITICAL \
-            --exit-code 1 \
-            --quiet \
-            --format json -o trivy-image-CRITICAL-results.json
-    """
+        docker run --rm \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v "$WORKSPACE":/workspace \
+        aquasec/trivy:0.72.0 \
+        image \
+        --severity HIGH,CRITICAL \
+        --exit-code 1 \
+        --quiet \
+        --format json \
+        --output /workspace/trivy-image-CRITICAL-results.json \
+        loneleveling/solar-system:$GIT_COMMIT   
+       """
         }
         post{
              always
                {
+                // Humans don't like reading JSON so converting JSON to HTML Reports below :)
+
                  sh '''
-                   trivy convert \
-                   --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
-                   --output trivy-image-MEDIUM-results.html trivy-image-MEDIUM-results.json
+                 docker run --rm \
+                -v "$WORKSPACE":/workspace \
+                aquasec/trivy:0.72.0 \
+                convert \
+                --format template \
+                --template "@/contrib/html.tpl" \
+                --output /workspace/trivy-image-MEDIUM-results.html \
+                /workspace/trivy-image-MEDIUM-results.json      
 
-                  trivy convert \
-                  --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
-                  --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
+                 docker run --rm \
+                -v "$WORKSPACE":/workspace \
+                aquasec/trivy:0.72.0 \
+                convert \
+                --format template \
+                --template "@/contrib/html.tpl" \
+                --output /workspace/trivy-image-CRITICAL-results.html \
+                /workspace/trivy-image-CRITICAL-results.json
 
-                  trivy convert \
-                  --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
-                  --output trivy-image-MEDIUM-results.xml trivy-image-MEDIUM-results.json
+                 docker run --rm \
+                 -v "$WORKSPACE":/workspace \
+                 aquasec/trivy:0.72.0 \
+                 convert \
+                 --format template \
+                 --template "@/contrib/junit.tpl" \
+                 --output /workspace/trivy-image-MEDIUM-results.xml \
+                /workspace/trivy-image-MEDIUM-results.json
                 
-                  trivy convert \
-                  --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
-                  --output trivy-image-CRITICAL-results.xml trivy-image-CRITICAL-results.json
+                  docker run --rm \
+                    -v "$WORKSPACE":/workspace \
+                    aquasec/trivy:0.72.0 \
+                    convert \
+                    --format template \
+                    --template "@/contrib/junit.tpl" \
+                    --output /workspace/trivy-image-CRITICAL-results.xml \
+                    /workspace/trivy-image-CRITICAL-results.json
                  '''
                 }
             }
