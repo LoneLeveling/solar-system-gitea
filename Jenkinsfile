@@ -142,10 +142,11 @@ pipeline{
                  '''
                 }
             }
+    }
 
         //Archiving Junit and publishing HTML reports always do post build stage.
     post{
-    always{
+        always{
         // Archiving the XML files
             junit allowEmptyResults: true, testResults: 'test-results.xml'
             junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
@@ -159,5 +160,3 @@ pipeline{
         }
     }
 }
-}
- 
