@@ -6,7 +6,7 @@ pipeline{
 
      environment {
         JAVA_HOME = "/opt/homebrew/opt/openjdk@21"
-        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+        PATH = "/usr/local/bin:${JAVA_HOME}/bin:${env.PATH}"
         MONGO_URI = "mongodb+srv://cluster0.7mmrff9.mongodb.net/superData?retryWrites=true&w=majority&appName=Cluster0"
         // MONGO_DB_CREDS=credentials('mongo-db-credentials')
         MONGO_USERNAME=credentials('mongo-db-username')
@@ -96,23 +96,6 @@ pipeline{
             }
         }
         }
-     stage('Debug Docker') {
-    steps {
-        sh '''
-        echo "Current User:"
-        whoami
-
-        echo "\nPATH:"
-        echo $PATH
-
-        echo "\nDocker location:"
-        which docker || true
-
-        echo "\nChecking docker binary:"
-        ls -l /usr/local/bin/docker || true
-        '''
-    }
-}
         stage('Build Docker Image'){
             steps{
             sh 'printenv'
