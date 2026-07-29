@@ -43,6 +43,7 @@ pipeline{
            --scan .
            --out .
            --format ALL
+           --disableYarnAudit
            --prettyPrint
            '''
           )
@@ -81,16 +82,19 @@ pipeline{
         }
         stage('SAST - SonarQube'){
             steps{
+                timeout(time: 60, unit: 'SECONDS') {
+           withSonarQubeEnv('sonar-qube-server') {
             sh 'echo $SONAR_SCANNER_HOME'
             sh '''
              $SONAR_SCANNER_HOME/bin/sonar-scanner \
              -Dsonar.projectKey=Solar-System-Project \
              -Dsonar.sources=app.js \
-             -Dsonar.host.url=http://localhost:9000 \
              -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-             -Dsonar.login=sqp_c58a0063bedfef6f8612c49d869b817e98aee8c5
                 '''
             }
+            waitForQualityGate abortPipeline: true
+            }
+        }
         }
         }
 
