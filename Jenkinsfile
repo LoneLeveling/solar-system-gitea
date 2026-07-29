@@ -96,7 +96,6 @@ pipeline{
             }
         }
         }
-
         stage('Build Docker Image'){
             sh 'printenv'
             sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
