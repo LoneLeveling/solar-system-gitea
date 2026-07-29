@@ -96,12 +96,20 @@ pipeline{
             }
         }
         }
-        stage('Debug') {
+     stage('Debug Docker') {
     steps {
         sh '''
+        echo "Current User:"
         whoami
-        which docker
+
+        echo "\nPATH:"
         echo $PATH
+
+        echo "\nDocker location:"
+        which docker || true
+
+        echo "\nChecking docker binary:"
+        ls -l /usr/local/bin/docker || true
         '''
     }
 }
