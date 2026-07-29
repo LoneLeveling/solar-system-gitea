@@ -96,6 +96,15 @@ pipeline{
             }
         }
         }
+        stage('Debug') {
+    steps {
+        sh '''
+        whoami
+        which docker
+        echo $PATH
+        '''
+    }
+}
         stage('Build Docker Image'){
             steps{
             sh 'printenv'
