@@ -119,7 +119,6 @@ pipeline{
             --format json -o trivy-image-CRITICAL-results.json
     """
         }
-        }
         post{
              always
                {
@@ -142,6 +141,7 @@ pipeline{
                  '''
                 }
             }
+        }
     }
 
         //Archiving Junit and publishing HTML reports always do post build stage.
