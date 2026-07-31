@@ -111,6 +111,7 @@ pipeline{
         -v "$WORKSPACE":/workspace \
         aquasec/trivy:0.72.0 \
         image \
+        --ignorefile /workspace/.trivyignore \
         --severity LOW,MEDIUM,HIGH \
         --exit-code 0 \
         --quiet \
@@ -123,6 +124,7 @@ pipeline{
         -v "$WORKSPACE":/workspace \
         aquasec/trivy:0.72.0 \
         image \
+        --ignorefile /workspace/.trivyignore \
         --severity CRITICAL \
         --exit-code 1 \
         --quiet \
