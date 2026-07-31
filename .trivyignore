@@ -1,2 +1,5 @@
 CVE-2026-59873
 CVE-2026-31789
+
+// Ignore approved upstream CVEs from the official Node base image
+// while continuing to fail the build for any new CRITICAL vulnerabilities.
