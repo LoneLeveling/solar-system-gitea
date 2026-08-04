@@ -197,7 +197,7 @@ pipeline{
     )]) {
         sh '''
         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-        docker push loneleveling/solar-system:$GIT_COMMIT
+        docker push brawd375/solar-system:$GIT_COMMIT
         docker logout
         '''
     }
