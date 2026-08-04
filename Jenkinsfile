@@ -188,14 +188,20 @@ pipeline{
     }
 }
         stage('Push Docker Image'){
-            environment {
-        PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
+
+        steps {
+    withCredentials([usernamePassword(
+        credentialsId: 'docker-hub-credentials',
+        usernameVariable: 'DOCKER_USER',
+        passwordVariable: 'DOCKER_PASS'
+    )]) {
+        sh '''
+        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+        docker push loneleveling/solar-system:$GIT_COMMIT
+        docker logout
+        '''
     }
-            steps{
-                withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-                sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
-        }
-    }
+}
 }
 }
            //Archiving Junit and publishing HTML reports always do post build stage.
