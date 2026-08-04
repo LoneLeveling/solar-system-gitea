@@ -178,6 +178,12 @@ pipeline{
                 }
             }
         }
+        stage('Push Docker Image'){
+            steps{
+                withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+                sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
+            }
+        }
     }
 
         //Archiving Junit and publishing HTML reports always do post build stage.
