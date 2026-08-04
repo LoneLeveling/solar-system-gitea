@@ -180,6 +180,9 @@ pipeline{
         }
            //Archiving Junit and publishing HTML reports always do post build stage.
         stage('Push Docker Image'){
+            environment {
+        PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
+    }
             steps{
                 withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
                 sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
