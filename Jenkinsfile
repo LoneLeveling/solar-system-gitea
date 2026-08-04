@@ -101,6 +101,8 @@ pipeline{
             // sh 'printenv'
             // sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
             sh 'docker build -t brawd375/solar-system:$GIT_COMMIT .'
+            sh 'docker image ls'
+            sh 'docker image inspect brawd375/solar-system:$GIT_COMMIT'
         }
         }
 
