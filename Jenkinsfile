@@ -178,15 +178,7 @@ pipeline{
                 }
             }
         }
-        stage('Push Docker Image'){
-            steps{
-                withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-                sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
-            }
-        }
-    }
-
-        //Archiving Junit and publishing HTML reports always do post build stage.
+           //Archiving Junit and publishing HTML reports always do post build stage.
     post{
         always{
         // Archiving the XML files
@@ -199,6 +191,13 @@ pipeline{
             publishHTML([allowMissing: true,alwaysLinkToLastBuild: true,keepAll: true,reportDir: '.',reportFiles: 'trivy-image-CRITICAL-results.html',reportName: 'Trivy CRITICAL Report'])
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'index.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Covergae HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
+    }
+        stage('Push Docker Image'){
+            steps{
+                withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+                sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
+            }
         }
     }
 }
