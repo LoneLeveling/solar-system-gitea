@@ -178,7 +178,15 @@ pipeline{
                 }
             }
         }
-           //Archiving Junit and publishing HTML reports always do post build stage.
+           stage('Debug Docker') {
+    steps {
+        sh '''
+        echo "PATH=$PATH"
+        which docker
+        docker --version
+        '''
+    }
+}
         stage('Push Docker Image'){
             environment {
         PATH = "/usr/local/bin:/opt/homebrew/bin:${env.PATH}"
@@ -190,6 +198,7 @@ pipeline{
     }
 }
 }
+           //Archiving Junit and publishing HTML reports always do post build stage.
     post{
         always{
         // Archiving the XML files
