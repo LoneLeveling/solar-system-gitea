@@ -197,8 +197,8 @@ pipeline{
             steps{
                 withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
                 sh 'docker push loneleveling/solar-system:$GIT_COMMIT'
-            }
         }
     }
 }
+    }
 }
