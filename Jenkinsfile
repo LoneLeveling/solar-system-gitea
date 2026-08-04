@@ -99,7 +99,8 @@ pipeline{
         stage('Build Docker Image'){
             steps{
             // sh 'printenv'
-            sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
+            // sh 'docker build -t loneleveling/solar-system:$GIT_COMMIT .'
+            sh 'docker build -t brawd375/solar-system:$GIT_COMMIT .'
         }
         }
 
@@ -117,7 +118,7 @@ pipeline{
         --quiet \
         --format json \
         --output /workspace/trivy-image-MEDIUM-results.json \
-        loneleveling/solar-system:$GIT_COMMIT
+        brawd375/solar-system:$GIT_COMMIT
 
         docker run --rm \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -130,7 +131,7 @@ pipeline{
         --quiet \
         --format json \
         --output /workspace/trivy-image-CRITICAL-results.json \
-        loneleveling/solar-system:$GIT_COMMIT   
+        brawd375/solar-system:$GIT_COMMIT   
        """
         }
         post{
