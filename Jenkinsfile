@@ -191,9 +191,12 @@ pipeline{
     }
 }
         stage('Push Docker Image'){
-        steps {
+            steps{
+            withEnv(['PATH+DOCKER=/usr/local/bin']){
             withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
             sh 'docker push brawd375/solar-system:$GIT_COMMIT'
+        }
+        }
         }
       }
         }
