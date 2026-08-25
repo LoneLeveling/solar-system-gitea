@@ -229,7 +229,7 @@ stage('Push Docker Image') {
         steps{
             sshagent(credentials: ['was-dev-deploy-ec2-instance']) {
                 sh '''
-                ssh -o StrictHostKeyChecking=no ubuntu@3.140.244.188 "
+                ssh -o StrictHostKeyChecking=no ubuntu@52.87.183.188 "
                     if sudo docker ps -a | grep -q "solar-system"; then
                         echo "Container found. Stopping..."
                         sudo docker stop "solar-system" && sudo docker rm "solar-system"
