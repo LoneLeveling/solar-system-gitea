@@ -239,11 +239,11 @@ stage('Deploy - AWS EC2') {
                 echo 'Container stopped and removed.'
             fi
 
-            sudo docker run --name solar-system \
-                -e MONGO_URI=$MONGO_URI \
-                -e MONGO_USERNAME=$MONGO_USERNAME \
-                -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                -p 3000:3000 \
+            sudo docker run --name solar-system \\
+                -e MONGO_URI=$MONGO_URI \\
+                -e MONGO_USERNAME=$MONGO_USERNAME \\
+                -e MONGO_PASSWORD=$MONGO_PASSWORD \\
+                -p 3000:3000 \\
                 -d brawd375/solar-system:$GIT_COMMIT
         "
     '''
