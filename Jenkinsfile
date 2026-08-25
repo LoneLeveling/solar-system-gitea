@@ -192,6 +192,8 @@ pipeline{
 }
         stage('Push Docker Image'){
         steps {
+            withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+            sh 'docker push brawd375/solar-system:$GIT_COMMIT'
         }
       }
       stage('Deploy - AWS EC2'){
