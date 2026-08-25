@@ -221,6 +221,7 @@ pipeline{
         }
       }
       }
+    }
            //Archiving Junit and publishing HTML reports always do post build stage.
     post{
         always{
@@ -237,4 +238,4 @@ pipeline{
         }
     }
 }
-}
+
