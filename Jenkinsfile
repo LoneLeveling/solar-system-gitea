@@ -190,15 +190,38 @@ pipeline{
         '''
     }
 }
-        stage('Push Docker Image'){
-            steps{
-            withEnv(['PATH+DOCKER=/usr/local/bin']){
-            withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
-            sh 'docker push brawd375/solar-system:$GIT_COMMIT'
+    //     stage('Push Docker Image'){
+    //         steps{
+    //         withEnv(['PATH+DOCKER=/usr/local/bin']){
+    //         withDockerRegistry(credentialsId: 'docker-hub-credentials', url: "") {
+    //         sh 'docker push brawd375/solar-system:$GIT_COMMIT'
+    //     }
+    //     }
+    //     }
+    //   }
+
+stage('Push Docker Image') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'docker-hub-credentials',
+                usernameVariable: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh '''
+                printf '%s' "$DOCKER_PASSWORD" | /usr/local/bin/docker login \
+                    --username "$DOCKER_USERNAME" \
+                    --password-stdin
+
+                /usr/local/bin/docker push brawd375/solar-system:$GIT_COMMIT
+
+                /usr/local/bin/docker logout
+            '''
         }
-        }
-        }
-      }
+    }
+}
+
       stage('Deploy - AWS EC2'){
         when{
            branch 'feature/*'
