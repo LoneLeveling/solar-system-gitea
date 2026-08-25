@@ -196,6 +196,7 @@ pipeline{
             sh 'docker push brawd375/solar-system:$GIT_COMMIT'
         }
       }
+        }
       stage('Deploy - AWS EC2'){
         when{
            branch 'feature/*'
