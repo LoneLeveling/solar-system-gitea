@@ -199,7 +199,6 @@ pipeline{
         }
         }
       }
-        }
       stage('Deploy - AWS EC2'){
         when{
            branch 'feature/*'
