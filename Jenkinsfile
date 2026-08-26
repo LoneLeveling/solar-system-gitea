@@ -230,7 +230,7 @@ stage('Deploy - AWS EC2') {
     steps {
         sshagent(credentials: ['was-dev-deploy-ec2-instance']) {
             sh '''
-                ssh -o StrictHostKeyChecking=no ubuntu@52.87.183.188 << EOF
+                ssh -o StrictHostKeyChecking=no ubuntu@3.88.192.114 << EOF
 
                 if sudo docker ps -a | grep -q 'solar-system'; then
                     echo 'Container found. Stopping...'
