@@ -260,7 +260,7 @@ stage('Integration Testing - AWS EC2') {
         sh 'printenv | grep -i branch'
         withAWS(credentials: 'aws-ec2-s3-lambda-creds', region: 'us-east-1b') {
             sh '''
-                bash integration-testing-ec2.sh
+                bash /Users/abhisheksharma/Desktop/solar-system-gitea/integration-testing-ec2.sh
             '''
         }
     }
