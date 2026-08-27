@@ -251,6 +251,20 @@ EOF
         }
     }
 }
+
+stage('Integration Testing - AWS EC2') {
+    when {
+        branch 'feature/*'
+    }
+    steps {
+        sh 'printenv | grep -i branch'
+        withAWS(credentials: 'aws-ec2-s3-lambda-creds', region: 'us-east-1b') {
+            sh '''
+                bash integration-testing-ec2.sh
+            '''
+        }
+    }
+}
     }
            //Archiving Junit and publishing HTML reports always do post build stage.
     post{
